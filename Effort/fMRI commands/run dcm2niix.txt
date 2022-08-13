@@ -1,0 +1,1 @@
+dcm2niix -f %p -z y "C:\Users\Tanya Wen\Box\Pro00101414\Effort\s19_05162022
