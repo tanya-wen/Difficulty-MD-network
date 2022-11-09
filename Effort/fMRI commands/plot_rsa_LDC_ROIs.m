@@ -3,12 +3,12 @@ clear all; close all; clc;
 
 dbstop if error
 
-network = 'reward';
+network = 'DMN';
 
 if strcmp(network,'MD')==1
     roi_names = {'AI','aMFG','preSMA','FEF','IPS','mMFG','pMFG','MDnetwork'};
 elseif strcmp(network,'DMN')==1
-    roi_names = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp'};
+    roi_names = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp','DMNnetwork'};
 elseif strcmp(network,'reward')==1
     roi_names = {'ACC','AI','striatum','thalamus'};
 end
@@ -18,7 +18,7 @@ addpath(genpath('/media/tw260/X6/software'));
 
 
 addpath(genpath(strcat('/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/',sprintf('%s',network))));
-pth = '/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/MD/s31';
+pth = sprintf('/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/%s/s31',network);
 load(fullfile(pth,'RDMs','rsa_LDC_RDMs.mat'))
 load(fullfile(pth,'RDMs','rsa_LDC_Models.mat'))
 load(fullfile(pth,'Details','rsa_LDC_fMRIMaskPreparation_Details.mat'))
@@ -40,7 +40,7 @@ new_roinames=strrep(new_roinames,'_','-');
 
 
 %% model fits per subject and roi
-fig_path = '/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/MD';
+fig_path = sprintf('/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/%s',network);
 
 model_coefficients=nan(nsub,length(roi_ind), 4);
 model_pvals=nan(length(roi_ind),4);

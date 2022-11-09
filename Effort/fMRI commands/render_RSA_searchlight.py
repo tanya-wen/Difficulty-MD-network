@@ -2,19 +2,19 @@ import gl
 import glob
 import re
 
-con_name = ['absolute', 'relative']
+con_name = ['absolute', 'relative', 'pixel']
 
 
-for con in range(2):
+for con in range(3):
 
     if con_name[con] == 'absolute':
         maxt=16
     elif con_name[con] == 'relative':
         maxt=8
 
-    post = 'G:/Effort/analysis/rsa_analysis/LDC_distance/Searchlight_10mm/SecondLevel/{}/spmT_0002.nii'.format(con_name[con])
+    post = '/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/Searchlight_10mm/Regression/SecondLevel/{}/spmT_0002.nii'.format(con_name[con])
 
-    posthreshfile = 'G:/Effort/analysis/rsa_analysis/LDC_distance/Searchlight_10mm/SecondLevel/{}/spmT_0002_FDR_p025.nii'.format(con_name[con])
+    posthreshfile = '/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/Searchlight_10mm/Regression/SecondLevel/{}/spmT_0002_FDR_p005.nii'.format(con_name[con])
 
     gl.resetdefaults()
     gl.backcolor(255, 255,255)
@@ -42,10 +42,10 @@ for con in range(2):
     gl.hiddenbycutout(1,1)
 
     #gl.mosaic("S R -0 Z 0.35 0.45 S 0.55 0.65 R 0");
-    gl.mosaic("H -0.03 S R -0 Z 0.333 S 0.55 0.666 R 0");
+    gl.mosaic("H -0.03 S R -0 Z 0.333 S 0.45 0.666 R 0");
 
     #gl.wait(500)
     #break
-    gl.savebmp('G:/Effort/analysis/rsa_analysis/LDC_distance/Searchlight_10mm/SecondLevel/{}/{}.bmp'.format(con_name[con],con_name[con]))
+    gl.savebmp('/media/tw260/X6/Effort/analysis/rsa_analysis/LDC_distance/Searchlight_10mm/SecondLevel/{}/{}.bmp'.format(con_name[con],con_name[con]))
 
 

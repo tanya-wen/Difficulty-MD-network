@@ -17,10 +17,10 @@ model_name =  'Model1';
 con = {'low', 'medium', 'high', 'low', 'medium', 'high'};
 ncons = numel(con);
 
-%%% ----- Model1 MD ROIs stats ----- %%%
+%%% ----- Model1 DMN ROIs stats ----- %%%
 
 % define ROIs
-apriori_rois = 'bilateral_MD';
+apriori_rois = 'bilateral_DMN';
 
 % load data
 load(fullfile(resultsfolder, sprintf('beta_values_%s_%s',model_name,apriori_rois)),'voxel_beta_values');
@@ -54,10 +54,10 @@ end
 
 
 
-%%% ----- Model1 MD ROIs plot ----- %%%
+%%% ----- Model1 DMN ROIs plot ----- %%%
 
 % define ROIs
-apriori_rois = 'bilateral_MD';
+apriori_rois = 'bilateral_DMN';
 roi_color = [1,0,0];
 
 % load data
@@ -95,7 +95,7 @@ for roi_ind = 1:nrois
     errorbar_input = stderror(:,roi_ind);
     bar(bar_input,'FaceColor',roi_color); hold on
     errorbar(bar_input,errorbar_input,'k.');
-    ylim([0,12])
+    ylim([-6,2])
     
     title(strrep(strrep(voxel_beta_values(1,1,roi_ind).roiname,'.nii',''),'_','-'));
     
@@ -139,10 +139,10 @@ for roi_ind = 1:nrois
 end
 
 % ANOVA (difficulty level x ROI)
-anova_activation = sub_activation; % (7 ROIs) x (2 contexts) x (3 levels)
-roi_names = {'AI','aMFG','preSMA','FEF','IPS','mMFG','pMFG'};
+anova_activation = sub_activation; % (11 ROIs) x (2 contexts) x (3 levels)
+roi_names = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp'};
 varnames = {};
-for roi = 1:7
+for roi = 1:11
     for context = {'easy', 'hard'}
         for level = 1:3
             varnames{end+1} = strcat(roi_names{roi},'_',context{1},'_',num2str(level));
@@ -151,19 +151,19 @@ for roi = 1:7
 end
 t = array2table(anova_activation,'VariableNames',varnames);
 
-within = table(repelem(['A','B','C','D','E','F','G']',6),repmat(['e','e','e','h','h','h']',7,1), repmat(['L','M','H','L','M','H']',7,1),'VariableNames',{'roi', 'context', 'level'});
-rm = fitrm(t,'AI_easy_1-pMFG_hard_3 ~1','WithinDesign', within);
+within = table(repelem(['A','B','C','D','E','F','G','H','I','J','K']',6),repmat(['e','e','e','h','h','h']',11,1), repmat(['L','M','H','L','M','H']',11,1),'VariableNames',{'roi', 'context', 'level'});
+rm = fitrm(t,'aMPFC_easy_1-Rsp_hard_3 ~1','WithinDesign', within);
 ranovatable = ranova(rm,'WithinModel','roi*context*level');
 
 % for each ROI, compare level 3 vs. level 4
 [H,P,CI,STATS] = ttest(sub_activation_3, sub_activation_4);
 [h, crit_p, adj_ci_cvrg, adj_p]=fdr_bh(P,0.05);
 
-%%% ----- Model1 MD network ----- %%%
+%%% ----- Model1 DMN network ----- %%%
 clear pvalues
 
 % define ROIs
-apriori_rois = 'MD_network';
+apriori_rois = 'DMN_network';
 roi_color = [1,0,0];
 
 % load data
@@ -185,7 +185,7 @@ figure(1000);
 
 bar(bar_input,'FaceColor',roi_color); hold on
 errorbar(bar_input,errorbar_input,'k.');
-ylim([0,12])
+ylim([-6,2])
 
 title(strrep(strrep(voxel_beta_values(1,1,1).roiname,'.nii',''),'_','-'));
 

@@ -5,7 +5,7 @@
 %% Initialisation
 clear all; close all; clc; dbstop if error;
 
-network = 'MD';
+network = 'DMN';
 
 % add paths to toolbox:
 here=fileparts(which(mfilename));
@@ -91,7 +91,7 @@ for subIDX = 1:numel(subject_list)
         userOptions.maskNames = {'AI','aMFG','preSMA','FEF','IPS','mMFG','pMFG','MDnetwork'};
     elseif strcmp(network,'DMN')==1
         userOptions.maskPath = fullfile(datadir,'ROIs','DMN rois','bilateral','[[maskName]].nii');
-        userOptions.maskNames = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp'};
+        userOptions.maskNames = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp','DMNnetwork'};
     elseif strcmp(network,'reward')==1
         userOptions.maskPath = fullfile(datadir,'ROIs','reward rois','bilateral','[[maskName]].nii');
         userOptions.maskNames = {'ACC','AI','striatum','thalamus'};

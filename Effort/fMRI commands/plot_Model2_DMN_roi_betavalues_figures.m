@@ -16,10 +16,10 @@ con = {'cue_easy_easy', 'cue_easy_hard', 'cue_hard_easy', 'cue_hard_hard', ...
 label_names = {'EE', 'EH', 'HE', 'HH', 'EE', 'EH', 'HE', 'HH'};
 ncons = numel(con);
 
-%%% ----- Model2 MD ROIs stats ----- %%%
+%%% ----- Model2 DMN ROIs stats ----- %%%
 
 % define ROIs
-apriori_rois = 'bilateral_MD';
+apriori_rois = 'bilateral_DMN';
 
 % load data
 load(fullfile(resultsfolder, sprintf('beta_values_%s_%s',model_name,apriori_rois)),'voxel_beta_values');
@@ -29,11 +29,11 @@ ncon = size(voxel_beta_values,2);
 nrois = size(voxel_beta_values,3);
 
 %% CUE PHASE
-%%% ----- Model2 MD ROIs plot ----- %%%
+%%% ----- Model2 DMN ROIs plot ----- %%%
 %             CUE PHASE              %
 %%% ----- ------------------- ----- %%%
 % define ROIs
-apriori_rois = 'bilateral_MD';
+apriori_rois = 'bilateral_DMN';
 roi_color = [1,0,0];
 
 % load data
@@ -62,7 +62,7 @@ for roi_ind = 1:nrois
     errorbar_input = stderror(:,roi_ind);
     bar(bar_input,'FaceColor',roi_color); hold on
     errorbar(bar_input,errorbar_input,'k.');
-    ylim([0,8])
+    ylim([-3,3])
     
     title(strrep(strrep(voxel_beta_values(1,1,roi_ind).roiname,'.nii',''),'_','-'));
     
@@ -76,27 +76,28 @@ for roi_ind = 1:nrois
     print(sprintf('/media/tw260/X6/Effort/analysis/results/ROI_betavalues/%s_cue_%s_%s.eps',model_name,apriori_rois,strrep(voxel_beta_values(1,1,roi_ind).roiname,'.nii','')),'-depsc2','-painters');
     
     roi_cnt = roi_cnt + 1;
+    pause(2)
 end
 
 % ANOVA 
-anova_activation = sub_activation; % (2 previous) x (2 current) x (7 ROIs) 
-roi_names = {'AI','aMFG','preSMA','FEF','IPS','mMFG','pMFG'};
+anova_activation = sub_activation; % (2 previous) x (2 current) x (11 ROIs) 
+roi_names = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp'};
 cond_names = {'EE', 'EH', 'HE', 'HH'};
 varnames = {};
-for roi = 1:7
+for roi = 1:11
     for c = 1:4
         varnames{end+1} = strcat(roi_names{roi},'_',cond_names{c});
     end
 end
 t = array2table(anova_activation,'VariableNames',varnames);
 
-within = table(repelem(['A','B','C','D','E','F','G']',4), repmat(['x','x','y','y']',7,1),repmat(['X','Y','X','Y']',7,1), 'VariableNames',{'roi','previous','current'});
-rm = fitrm(t,'AI_EE-pMFG_HH ~1','WithinDesign', within);
+within = table(repelem(['A','B','C','D','E','F','G','H','I','J','K']',4), repmat(['x','x','y','y']',11,1),repmat(['X','Y','X','Y']',11,1), 'VariableNames',{'roi','previous','current'});
+rm = fitrm(t,'aMPFC_EE-Rsp_HH ~1','WithinDesign', within);
 ranovatable = ranova(rm,'WithinModel','roi*previous*current');
 
 
 r = 1;
-for beta = 1:4:28
+for beta = 1:4:44
     
     roi_names{r}
     r = r + 1;
@@ -116,11 +117,11 @@ end
 
 
 %% MATH PHASE
-%%% ----- Model2 MD ROIs plot ----- %%%
+%%% ----- Model2 DMN ROIs plot ----- %%%
 %             MATH PHASE              %
 %%% ----- ------------------- ----- %%%
 % define ROIs
-apriori_rois = 'bilateral_MD';
+apriori_rois = 'bilateral_DMN';
 roi_color = [1,0,0];
 
 % load data
@@ -149,7 +150,7 @@ for roi_ind = 1:nrois
     errorbar_input = stderror(:,roi_ind);
     bar(bar_input,'FaceColor',roi_color); hold on
     errorbar(bar_input,errorbar_input,'k.');
-    ylim([0,12])
+    ylim([-6,3])
     
     title(strrep(strrep(voxel_beta_values(1,1,roi_ind).roiname,'.nii',''),'_','-'));
     
@@ -163,27 +164,29 @@ for roi_ind = 1:nrois
     print(sprintf('/media/tw260/X6/Effort/analysis/results/ROI_betavalues/%s_task_%s_%s.eps',model_name,apriori_rois,strrep(voxel_beta_values(1,1,roi_ind).roiname,'.nii','')),'-depsc2','-painters');
     
     roi_cnt = roi_cnt + 1;
+    pause(2)
 end
 
 % ANOVA (switch x difficulty level x ROI)
-anova_activation = sub_activation; % (2 previous) x (2 current) x (7 ROIs) 
-roi_names = {'AI','aMFG','preSMA','FEF','IPS','mMFG','pMFG'};
+anova_activation = sub_activation; % (2 previous) x (2 current) x (11 ROIs) 
+roi_names = {'aMPFC','PCC','dMPFC','LTC','TPJ','Temp','vMPFC','pIPL','HF','PHC','Rsp'};
 cond_names = {'EE', 'EH', 'HE', 'HH'};
 varnames = {};
-for roi = 1:7
+for roi = 1:11
     for c = 1:4
         varnames{end+1} = strcat(roi_names{roi},'_',cond_names{c});
     end
 end
 t = array2table(anova_activation,'VariableNames',varnames);
 
-within = table(repelem(['A','B','C','D','E','F','G']',4), repmat(['x','x','y','y']',7,1),repmat(['X','Y','X','Y']',7,1), 'VariableNames',{'roi','previous','current'});
-rm = fitrm(t,'AI_EE-pMFG_HH ~1','WithinDesign', within);
+within = table(repelem(['A','B','C','D','E','F','G','H','I','J','K']',4), repmat(['x','x','y','y']',11,1),repmat(['X','Y','X','Y']',11,1), 'VariableNames',{'roi','previous','current'});
+rm = fitrm(t,'aMPFC_EE-Rsp_HH ~1','WithinDesign', within);
 ranovatable = ranova(rm,'WithinModel','roi*previous*current');
 
 
+
 r = 1;
-for beta = 1:4:28
+for beta = 1:4:44
     
     roi_names{r}
     r = r + 1;
@@ -203,13 +206,13 @@ end
 
 
 %% CUE PHASE
-%%% ----- Model2 MD network  ----- %%%
+%%% ----- Model2 DMN network  ----- %%%
 %             CUE PHASE              %
 %%% ----- ------------------- ----- %%%
 clear pvalues
 
 % define ROIs
-apriori_rois = 'MD_network';
+apriori_rois = 'DMN_network';
 roi_color = [1,0,0];
 
 % load data
@@ -230,7 +233,7 @@ figure(1000);
 
 bar(bar_input,'FaceColor',roi_color); hold on
 errorbar(bar_input,errorbar_input,'k.');
-ylim([0,8])
+ylim([-3,3])
 
 title(strrep(strrep(voxel_beta_values(1,1,1).roiname,'.nii',''),'_','-'));
 
@@ -256,13 +259,13 @@ ranovatable = ranova(rm,'WithinModel','previous*current');
 
 
 %% MATH PHASE
-%%% ----- Model2 MD network  ----- %%%
+%%% ----- Model2 DMN network  ----- %%%
 %             MATH PHASE              %
 %%% ----- ------------------- ----- %%%
 clear pvalues
 
 % define ROIs
-apriori_rois = 'MD_network';
+apriori_rois = 'DMN_network';
 roi_color = [1,0,0];
 
 % load data
@@ -283,7 +286,7 @@ figure(200);
 
 bar(bar_input,'FaceColor',roi_color); hold on
 errorbar(bar_input,errorbar_input,'k.');
-ylim([0,12])
+ylim([-6,3])
 
 title(strrep(strrep(voxel_beta_values(1,1,1).roiname,'.nii',''),'_','-'));
 
